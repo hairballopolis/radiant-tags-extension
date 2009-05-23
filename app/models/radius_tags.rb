@@ -71,10 +71,14 @@ module RadiusTags
     output += "</ul>"
   end
  
-  desc "List the current page's tags"
+  desc "List the current page's tags defaults to a search?tag=<em>name</em> <pre><r:tag_list [type='link|search']/></pre>"
   tag "tag_list" do |tag|
-    output = []
-    tag.locals.page.tag_list.split(MetaTag::DELIMITER).each {|t| output << "<a href=\"#{tag_item_url(t)}\" class=\"tag\">#{t}</a>"}
+    output = []                                                               
+    if tag.attr['type'] =='link'
+      tag.locals.page.tag_list.split(MetaTag::DELIMITER).each {|t| output << "<a href=\"#{tag_item_url(t)}\" class=\"tag\">#{t}</a>"}
+    else                                                                                                                                    
+      tag.locals.page.tag_list.split(MetaTag::DELIMITER).each {|t| output << "<a href=\"#{tag_item_search_url(t)}\" class=\"tag\">#{t}</a>"}
+    end
     output.join ", "
   end
   
@@ -146,6 +150,10 @@ module RadiusTags
 
   def tag_item_url(name)
     "#{Radiant::Config['tags.results_page_url']}/#{name}"
+  end
+   
+  def tag_item_search_url(name)
+    "#{Radiant::Config['tags.results_page_url']}?tag=#{name}"
   end
   
   def find_with_tag_options(tag)
