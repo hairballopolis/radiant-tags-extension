@@ -37,6 +37,22 @@ class TagSearchPage < Page
     end
   end
   
+  tag 'search:results:each:if_first' do |tag|
+    tag.expand if tag.locals.page == query_result.first
+  end
+
+  tag 'search:results:each:unless_first' do |tag|
+    tag.expand unless tag.locals.page == query_result.first
+  end
+  
+  tag 'search:results:each:if_last' do |tag|
+    tag.expand if tag.locals.page == query_result.last
+  end
+  
+  tag 'search:results:each:unless_last' do |tag|
+    tag.expand unless tag.locals.page == query_result.last
+  end
+  
   desc %{    <r:truncate_and_strip [length="100"] />
     Truncates and strips all HTML tags from the content of the contained block.  
     Useful for displaying a snippet of a found page.  The optional `length' attribute
