@@ -47,11 +47,12 @@ module RadiusTags
     tag_cloud = MetaTag.cloud(:limit => tag.attr['limit'].to_i || 5).sort
     tag_cloud = filter_tags_to_url_scope(tag_cloud, tag.attr['scope']) unless tag.attr['scope'].nil?
     
-    results_page = tag.attr['results_page'] || Radiant::Config['tags.results_page_url']
+    results_page = tag.attr['results_page'] || Radiant::Config['tags.results_page_url']    
+    connector = tag.attr['type'] != 'search' ? '/' : '?tag='
     output = "<ol class=\"tag_cloud\">"
     if tag_cloud.length > 0
     	build_tag_cloud(tag_cloud, %w(size1 size2 size3 size4 size5 size6 size7 size8 size9)) do |tag, cloud_class, amount|
-    		output += "<li class=\"#{cloud_class}\"><span>#{pluralize(amount, 'page is', 'pages are')} tagged with </span><a href=\"#{results_page}/#{tag}\" class=\"tag\">#{tag}</a></li>"
+    		output += "<li class=\"#{cloud_class}\"><span>#{pluralize(amount, 'page is', 'pages are')} tagged with </span><a href=\"#{results_page}#{connector}#{tag}\" class=\"tag\">#{tag}</a></li>"
     	end
     else
     	return "<p>No tags found.</p>"
@@ -85,7 +86,7 @@ module RadiusTags
   desc "List the current page's tags defaults to a search?tag=<em>name</em> <pre><r:tag_list [type='link|search']/></pre>"
   tag "tag_list" do |tag|
     output = []
-    tag.locals.page.tag_list.split(MetaTag::DELIMITER).each {|t| output << "<a href=\"#{tag.attr['type'] =='link' ? tag_item_url(t) : tag_item_search_url(t)}\" class=\"tag\">#{t}</a>"}
+    tag.locals.page.tag_list.split(MetaTag::DELIMITER).each {|t| output << "<a href=\"#{tag.attr['type'] !='search' ? tag_item_url(t) : tag_item_search_url(t)}\" class=\"tag\">#{t}</a>"}
     output.join ", "
   end
   
