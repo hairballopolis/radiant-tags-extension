@@ -41,7 +41,7 @@ module RadiusTags
     The results_page attribute will default to #{Radiant::Config['tags.results_page_url']}
     
     *Usage:*
-    <pre><code><r:tag_cloud_list [limit="number"] [results_page="/some/url"] [scope="/some/url"]/></code></pre>
+    <pre><code><r:tag_cloud_list [limit="number"] [results_page="/some/url"] [scope="/some/url"] [type='link|search']/></code></pre>
   }
   tag "tag_cloud" do |tag|
     tag_cloud = MetaTag.cloud(:limit => tag.attr['limit'].to_i || 5).sort
@@ -82,12 +82,8 @@ module RadiusTags
  
   desc "List the current page's tags defaults to a search?tag=<em>name</em> <pre><r:tag_list [type='link|search']/></pre>"
   tag "tag_list" do |tag|
-    output = []                                                               
-    if tag.attr['type'] =='link'
-      tag.locals.page.tag_list.split(MetaTag::DELIMITER).each {|t| output << "<a href=\"#{tag_item_url(t)}\" class=\"tag\">#{t}</a>"}
-    else                                                                                                                                    
-      tag.locals.page.tag_list.split(MetaTag::DELIMITER).each {|t| output << "<a href=\"#{tag_item_search_url(t)}\" class=\"tag\">#{t}</a>"}
-    end
+    output = []
+    tag.locals.page.tag_list.split(MetaTag::DELIMITER).each {|t| output << "<a href=\"#{tag.attr['type'] =='link' ? tag_item_url(t) : tag_item_search_url(t)}\" class=\"tag\">#{t}</a>"}
     output.join ", "
   end
   
