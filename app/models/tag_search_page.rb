@@ -45,19 +45,19 @@ class TagSearchPage < Page
   end
   
   tag 'search:results:each:if_first' do |tag|
-    tag.expand if tag.locals.page == query_result.first
+    tag.expand if tag.locals.page == found_tags.first
   end
 
   tag 'search:results:each:unless_first' do |tag|
-    tag.expand unless tag.locals.page == query_result.first
+    tag.expand unless tag.locals.page == found_tags.first
   end
   
   tag 'search:results:each:if_last' do |tag|
-    tag.expand if tag.locals.page == query_result.last
+    tag.expand if tag.locals.page == found_tags.last
   end
   
   tag 'search:results:each:unless_last' do |tag|
-    tag.expand unless tag.locals.page == query_result.last
+    tag.expand unless tag.locals.page == found_tags.last
   end
   
   desc %{    <r:truncate_and_strip [length="100"] />
